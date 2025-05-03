@@ -4,6 +4,7 @@ import (
  "fmt"
  "github.com/chuks/JWTGO/model"
  "os"
+ "log"
 
  "gorm.io/gorm"
  "gorm.io/driver/postgres"
@@ -22,7 +23,8 @@ func Connect() {
 
  DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
  if err != nil {
-  panic("failed to connect database")
+  log.Println("Failed to connect to database")
+  fmt.Println("Error:", err)
  }
  fmt.Println("Connection Opened to Database")
 

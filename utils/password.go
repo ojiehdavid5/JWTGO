@@ -1,4 +1,5 @@
 package utils
+
 import "golang.org/x/crypto/bcrypt"
 
 func GeneratePassword(p string) string {
