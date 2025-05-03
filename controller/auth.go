@@ -1,6 +1,7 @@
 package controller
 
-import("fmt"
+import(
+	// "fmt"
 "github.com/chuks/JWTGO/database"
 "github.com/chuks/JWTGO/model"
 "github.com/gofiber/fiber/v2"
@@ -15,32 +16,52 @@ type authRequest struct {
 }
 
 func Register(c *fiber.Ctx) error {
-	var body authRequest
-	if err := c.BodyParser(&body); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid request",
-		})
+	var req authRequest
+	if err := c.BodyParser(&req); err != nil {
+	 return c.Status(400).JSON(fiber.Map{
+	  "message": err.Error(),
+	 })
 	}
-
 	user := model.User{
-		Email:        body.Email,
-		PasswordHash: utils.GeneratePassword(body.Password),
+	 Email:        req.Email,
+	 PasswordHash: utils.GeneratePassword(req.Password),
 	}
-
-	if err := database.DB.Create(&user).Error; err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Could not create user",
-		})
+	res := database.DB.Create(&user)
+	if res.Error != nil {
+	 return c.Status(400).JSON(fiber.Map{
+	  "message": res.Error.Error(),
+	 })
 	}
-
-	token, err := utils.GenerateToken(user.ID)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Could not generate token",
-		})
-	}
-
-	return c.JSON(fiber.Map{
-		"token": token,
+	return c.Status(201).JSON(fiber.Map{
+	 "message": "user created",
 	})
-}
+   }
+   
+
+   func Login(c *fiber.Ctx) error {
+	var req authRequest
+	if err := c.BodyParser(&req); err != nil {
+	 return c.Status(400).JSON(fiber.Map{
+	  "message": err.Error(),
+	 })
+	}
+	var user model.User
+	res := database.DB.Where("email = ?", req.Email).First(&user)
+	if res.Error != nil {					
+	 return c.Status(400).JSON(fiber.Map{
+	  "message": res.Error.Error(),
+	 })
+	}
+	if !utils.VerifyPassword(user.PasswordHash, req.Password) {				
+	 return c.Status(400).JSON(fiber.Map{
+	  "message": "invalid password",
+	 })
+	}
+	token, err := utils.GenerateToken(user.ID)
+	if err != nil {								
+			 return c.Status(500).JSON(fiber.Map{
+	  "message": err.Error(),
+	 })
+	}
+	return c.Status(200).JSON(fiber.Map{	
+								 "token":token			})}
