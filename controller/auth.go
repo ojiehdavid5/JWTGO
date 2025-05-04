@@ -8,7 +8,9 @@ import (
 	"github.com/chuks/JWTGO/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"regexp"
 )
+
 
 type Auth struct {
 	DB *gorm.DB
@@ -32,6 +34,9 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		Email:        req.Email,
 		PasswordHash: utils.GeneratePassword(req.Password),
 	}
+
+	
+
 	// Check if the user already exists
 
 	if strings.Contains(req.Email, "@gmail.com") {
