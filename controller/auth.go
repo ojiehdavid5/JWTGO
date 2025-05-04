@@ -8,9 +8,7 @@ import (
 	"github.com/chuks/JWTGO/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
-	"regexp"
 )
-
 
 type Auth struct {
 	DB *gorm.DB
@@ -20,6 +18,7 @@ type authRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
 func NewAuth(db *gorm.DB) *Auth {
 	return &Auth{DB: db}
 }
@@ -34,14 +33,10 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		Email:        req.Email,
 		PasswordHash: utils.GeneratePassword(req.Password),
 	}
-
-	
-
 	// Check if the user already exists
-
 	if strings.Contains(req.Email, "@gmail.com") {
 		fmt.Println("Valid email")
-	}else{
+	} else {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "invalid email",
 		})
@@ -53,10 +48,8 @@ func (a Auth) Register(c *fiber.Ctx) error {
 			"message": "user already exists",
 		})
 
-	}	
-		
+	}
 	// Create the user
-
 	res = a.DB.Create(&user)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -68,7 +61,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	})
 }
 
-func (a Auth)Login(c *fiber.Ctx) error {
+func (a Auth) Login(c *fiber.Ctx) error {
 	var req authRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(400).JSON(fiber.Map{

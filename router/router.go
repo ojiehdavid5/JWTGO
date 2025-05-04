@@ -2,7 +2,6 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	// "github.com/gofiber/contrib/jwt"
 	"gorm.io/gorm"
 	"github.com/chuks/JWTGO/middleware"
 )
