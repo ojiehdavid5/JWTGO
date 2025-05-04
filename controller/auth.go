@@ -2,18 +2,24 @@ package controller
 
 import (
 	// "fmt"
-	"github.com/chuks/JWTGO/database"
 	"github.com/chuks/JWTGO/model"
 	"github.com/chuks/JWTGO/utils"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
+
+type Auth struct {
+	DB *gorm.DB
+}
 
 type authRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
-
-func Register(c *fiber.Ctx) error {
+func NewAuth(db *gorm.DB) *Auth {
+	return &Auth{DB: db}
+}
+func (a Auth) Register(c *fiber.Ctx) error {
 	var req authRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -24,7 +30,7 @@ func Register(c *fiber.Ctx) error {
 		Email:        req.Email,
 		PasswordHash: utils.GeneratePassword(req.Password),
 	}
-	res := database.DB.Create(&user)
+	res := a.DB.Create(&user)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": res.Error.Error(),
@@ -35,7 +41,7 @@ func Register(c *fiber.Ctx) error {
 	})
 }
 
-func Login(c *fiber.Ctx) error {
+func (a Auth)Login(c *fiber.Ctx) error {
 	var req authRequest
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -43,7 +49,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 	var user model.User
-	res := database.DB.Where("email = ?", req.Email).First(&user)
+	res := a.DB.Where("email = ?", req.Email).First(&user)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": res.Error.Error(),

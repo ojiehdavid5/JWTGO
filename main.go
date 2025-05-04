@@ -28,18 +28,18 @@ func main() {
 	fmt.Println("DB_NAME:", os.Getenv("DB_NAME"))
 	fmt.Println("DB_SSLMODE:", os.Getenv("DB_SSLMODE"))
 
-	database.Connect()
+	db, err := database.Connect()
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Fatalf("Failed to connect to database: %v\n", err)
 	}
-
+ 
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
-	router.SetupRoutes(app)
+	router.SetupRoutes(app, db)
 
 	log.Fatal(app.Listen(":3000"))
 }

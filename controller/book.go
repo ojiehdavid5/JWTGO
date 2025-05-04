@@ -2,18 +2,26 @@ package controller
 
 import (
 	"fmt"
-	"github.com/chuks/JWTGO/database"
 	"github.com/chuks/JWTGO/model"
 	"github.com/gofiber/fiber/v2"
 	// "log"
+	"gorm.io/gorm"
 )
 
-func GetBook(c *fiber.Ctx) error {
+type Book struct {
+	DB *gorm.DB
+}
+
+func NewBook(db *gorm.DB) *Book {
+	return &Book{DB: db}
+}
+
+func (b Book) GetBook(c *fiber.Ctx) error {
 	// Get the book ID from the URL parameter
 	bookID := c.Params("id")
 	// Find the book in the database
 	book := model.Book{}
-	res := database.DB.First(&book, bookID)
+	res := b.DB.First(&book, bookID)
 	if res.Error != nil {
 		return c.Status(404).JSON(fiber.Map{
 			"message": res.Error.Error(),
@@ -22,10 +30,10 @@ func GetBook(c *fiber.Ctx) error {
 	// Return the book as JSON
 	return c.Status(200).JSON(book)
 }
-func GetBooks(c *fiber.Ctx) error {
+func (b Book) GetBooks(c *fiber.Ctx) error {
 	// Get all books from the database
 	books := []model.Book{}
-	res := database.DB.Find(&books)
+	res := b.DB.Find(&books)
 	if res.Error != nil {
 		return c.Status(404).JSON(fiber.Map{
 			"message": res.Error.Error(),
@@ -34,7 +42,7 @@ func GetBooks(c *fiber.Ctx) error {
 	// Return the books as JSON
 	return c.Status(200).JSON(books)
 }
-func CreateBook(c *fiber.Ctx) error {
+func (b Book) CreateBook(c *fiber.Ctx) error {
 	// log.Println("CreateBook controller called")
 
 	// Parse the request body
@@ -50,7 +58,7 @@ func CreateBook(c *fiber.Ctx) error {
 		Author: req.Author,
 	}
 
-	res := database.DB.Create(&book)
+	res := b.DB.Create(&book)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": res.Error.Error(),
@@ -62,12 +70,12 @@ func CreateBook(c *fiber.Ctx) error {
 	return c.Status(201).JSON(book)
 	// return c.SendString("CreateBook called")
 }
-func UpdateBook(c *fiber.Ctx) error {
+func (b Book) UpdateBook(c *fiber.Ctx) error {
 	// Get the book ID from the URL parameter
 	bookID := c.Params("id")
 	// Find the book in the database
 	book := model.Book{}
-	res := database.DB.First(&book, bookID)
+	res := b.DB.First(&book, bookID)
 	if res.Error != nil {
 		return c.Status(404).JSON(fiber.Map{
 			"message": res.Error.Error(),
@@ -82,7 +90,7 @@ func UpdateBook(c *fiber.Ctx) error {
 	}
 	book.Title = req.Title
 	book.Author = req.Author
-	res = database.DB.Save(&book)
+	res = b.DB.Save(&book)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": res.Error.Error(),
@@ -90,19 +98,19 @@ func UpdateBook(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(book)
 }
-func DeleteBook(c *fiber.Ctx) error {
+func (b Book) DeleteBook(c *fiber.Ctx) error {
 	// Get the book ID from the URL parameter
 	bookID := c.Params("id")
 	// Find the book in the database
 	book := model.Book{}
-	res := database.DB.First(&book, bookID)
+	res := b.DB.First(&book, bookID)
 	if res.Error != nil {
 		return c.Status(404).JSON(fiber.Map{
 			"message": res.Error.Error(),
 		})
 	}
 	// Delete the book from the database
-	res = database.DB.Delete(&book)
+	res = b.DB.Delete(&book)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": res.Error.Error(),

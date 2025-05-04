@@ -3,23 +3,25 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	// "github.com/gofiber/contrib/jwt"
+	"gorm.io/gorm"
 )
 import "github.com/chuks/JWTGO/controller"
 
-func SetupRoutes(app *fiber.App) {
+func SetupRoutes(app *fiber.App, db *gorm.DB) {
 
 	api := app.Group("/api")
-
+	book := controller.NewBook(db)
+	auth := controller.NewAuth(db)
 	// Book
-	book := api.Group("/books")
-	book.Get("/", controller.GetBooks)
-	book.Get("/:id", controller.GetBook)
-	book.Post("/", controller.CreateBook)
-	book.Patch("/:id", controller.UpdateBook)
-	book.Delete("/:id", controller.DeleteBook)
+	bookRoute := api.Group("/books")
+	bookRoute.Get("/", book.GetBooks)
+	bookRoute.Get("/:id", book.GetBook)
+	bookRoute.Post("/", book.CreateBook)
+	bookRoute.Patch("/:id", book.UpdateBook)
+	bookRoute.Delete("/:id", book.DeleteBook)
 
 	// Auth
-	auth := api.Group("/auth")
-	auth.Post("/login", controller.Login)
-	auth.Post("/register", controller.Register)
+	authRoute := api.Group("/auth")
+	authRoute.Post("/login", auth.Login)
+	authRoute.Post("/register", auth.Register)
 }
