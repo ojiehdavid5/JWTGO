@@ -1,7 +1,9 @@
 package controller
 
 import (
-	// "fmt"
+	"fmt"
+	"strings"
+
 	"github.com/chuks/JWTGO/model"
 	"github.com/chuks/JWTGO/utils"
 	"github.com/gofiber/fiber/v2"
@@ -30,7 +32,27 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		Email:        req.Email,
 		PasswordHash: utils.GeneratePassword(req.Password),
 	}
-	res := a.DB.Create(&user)
+	// Check if the user already exists
+
+	if strings.Contains(req.Email, "@gmail.com") {
+		fmt.Println("Valid email")
+	}else{
+		return c.Status(400).JSON(fiber.Map{
+			"message": "invalid email",
+		})
+	}
+	var existingUser model.User
+	res := a.DB.Where("email = ?", req.Email).First(&existingUser)
+	if res.Error == nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "user already exists",
+		})
+
+	}	
+		
+	// Create the user
+
+	res = a.DB.Create(&user)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": res.Error.Error(),
