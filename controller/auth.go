@@ -9,6 +9,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 	"time"
+	"github.com/resend/resend-go/v2"
+	// "log"
 )
 
 type Auth struct {
@@ -34,9 +36,9 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		Email:        req.Email,
 		PasswordHash: utils.GeneratePassword(req.Password),
 	}
+
 	// Check if the user already exists
 	if strings.Contains(req.Email, "@gmail.com") {
-		fmt.Println("Valid email")
 	} else {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "invalid email",
@@ -48,8 +50,30 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "user already exists",
 		})
-
 	}
+	fmt.Println(&user);
+	apiKey := "re_eY82hvAL_89v9aqGgpVf8qusCDXrjESvD"
+
+    client := resend.NewClient(apiKey)
+
+    params := &resend.SendEmailRequest{
+        From:    "onboarding@resend.dev",
+        To:      []string{user.Email},
+        Subject: "Hello World",
+        Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
+		
+    }
+
+    sent, err := client.Emails.Send(params)
+
+	if err != nil {
+		panic(err)
+	}
+	// Print the response
+	println("Email sent successfully:", sent)
+	  // Create a new message
+	 
+
 	// Create the user
 	res = a.DB.Create(&user)
 	if res.Error != nil {
@@ -57,10 +81,36 @@ func (a Auth) Register(c *fiber.Ctx) error {
 			"message": res.Error.Error(),
 		})
 	}
+
+	  // Create a new message
+	apiKey = "re_eY82hvAL_89v9aqGgpVf8qusCDXrjESvD"
+
+    client = resend.NewClient(apiKey)
+
+    params = &resend.SendEmailRequest{
+        From:    "onboarding@resend.dev",
+        To:      []string{"ojiehdavid5@gmail.com"},
+        Subject: "Hello World",
+        Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
+		
+    }
+
+    sent, err = client.Emails.Send(params)
+
+	if err != nil {
+		panic(err)
+	}
+	// Print the response
+	println("Email sent successfully:", sent)
+
+
+	
 	return c.Status(201).JSON(fiber.Map{
 		"message": "user created",
 	})
 }
+	
+
 
 func (a Auth) Login(c *fiber.Ctx) error {
 	var req authRequest
