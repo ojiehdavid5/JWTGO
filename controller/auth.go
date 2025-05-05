@@ -8,6 +8,7 @@ import (
 	"github.com/chuks/JWTGO/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"time"
 )
 
 type Auth struct {
@@ -87,5 +88,7 @@ func (a Auth) Login(c *fiber.Ctx) error {
 		})
 	}
 	return c.Status(200).JSON(fiber.Map{
-		"token": token})
+		"token":       token,
+		"Login in at": time.Now(),
+	})
 }

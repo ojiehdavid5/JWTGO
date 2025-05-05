@@ -14,6 +14,7 @@ import (
 	"github.com/chuks/JWTGO/router"
 	"os"
 	// "github.com/gofiber/swagger"
+	"time"
 )
 
 func main() {
@@ -28,6 +29,7 @@ func main() {
 	fmt.Println("DB_PASSWORD:", os.Getenv("DB_PASSWORD"))
 	fmt.Println("DB_NAME:", os.Getenv("DB_NAME"))
 	fmt.Println("DB_SSLMODE:", os.Getenv("DB_SSLMODE"))
+	fmt.Println(time.Now())
 
 	db, err := database.Connect()
 	if err != nil {
