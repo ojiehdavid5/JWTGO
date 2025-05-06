@@ -59,8 +59,8 @@ func (a Auth) Register(c *fiber.Ctx) error {
     params := &resend.SendEmailRequest{
         From:    "onboarding@resend.dev",
         To:      []string{user.Email},
-        Subject: "Hello World",
-        Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
+        Subject: "Welcome to folben",
+        Html:    "<p>Welcome to <strong>folben</strong> where we make travelling seamless for all user's</p>",
 		
     }
 
