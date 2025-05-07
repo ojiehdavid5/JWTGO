@@ -4,12 +4,7 @@ import (
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
-	
 )
-
-
-
-
 
 func GenerateToken(id uint) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -26,16 +21,6 @@ func GenerateToken(id uint) (string, error) {
 
 	return t, nil
 }
-//    func ValidateToken(tokenString string) (*jwt.Token, error) {
-// 	// Parse the token
-// 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-// 		// Check the signing method
-// 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-// 			return nil, jwt.NewValidationError("unexpected signing method", jwt.ValidationErrorSignatureInvalid)
-// 		}
-// 		// Return the secret key for validation
-// 		return []byte(os.Getenv("JWT_SECRET")), nil
-// 	}}
 
 func VerifyToken(tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {

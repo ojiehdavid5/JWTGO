@@ -24,4 +24,5 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	authRoute := api.Group("/auth")
 	authRoute.Post("/login", auth.Login)
 	authRoute.Post("/register", auth.Register)
+	authRoute.Post("/otp", auth.VerifyOTP)
 }

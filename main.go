@@ -3,17 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	// "github.com/gofiber/contrib/jwt"
-	// "github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
-	// "golang.org/x/crypto/bcrypt"
-	// "gorm.io/gorm"
 	"github.com/chuks/JWTGO/database"
 	"log"
-	// "os"
 	"github.com/chuks/JWTGO/router"
 	"os"
-	// "github.com/gofiber/swagger"
 	"time"
 )
 
