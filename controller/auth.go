@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -55,7 +56,8 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		})
 	}
 	fmt.Println(&user)
-	apiKey := "re_eY82hvAL_89v9aqGgpVf8qusCDXrjESvD"
+	apiKey := os.Getenv("APIKEY")
+	fmt.Println("API Key:", apiKey)
 
 	client := resend.NewClient(apiKey)
 
@@ -84,7 +86,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	}
 
 	// Create a new message
-	apiKey = "re_eY82hvAL_89v9aqGgpVf8qusCDXrjESvD"
+	apiKey = os.Getenv("APIKEY")
 
 	client = resend.NewClient(apiKey)
 
@@ -132,7 +134,7 @@ func (a Auth) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	apiKey := "re_eY82hvAL_89v9aqGgpVf8qusCDXrjESvD"
+	apiKey := os.Getenv("APIKEY")
 
 	client := resend.NewClient(apiKey)
 
@@ -196,7 +198,7 @@ func (a Auth) VerifyOTP(c *fiber.Ctx) error {
 		})
 	}
 
-	apiKey := "re_eY82hvAL_89v9aqGgpVf8qusCDXrjESvD"
+	apiKey := os.Getenv("APIKEY")
 
 	client := resend.NewClient(apiKey)
 
