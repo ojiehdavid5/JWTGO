@@ -7,6 +7,7 @@ import (
 	"github.com/chuks/JWTGO/utils"
 	// "log"
 	"time"
+	"fmt"
 )
 
 type Administrator struct {
@@ -36,6 +37,8 @@ func(a Administrator) Register(c *fiber.Ctx) error {
 		Name:        req.Name,
 		PasswordHash: utils.GeneratePassword(req.PasswordHash),
 	}
+	fmt.Println(&admin)
+
 
 	res := a.DB.Create(&admin)
 	if res.Error != nil {
