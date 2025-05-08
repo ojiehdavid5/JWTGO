@@ -43,7 +43,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	}
 
 	// Check if the user already exists
-	if !strings.Contains(req.Email, "@gmail.com") {
+	if !strings.Contains(req.Email, "@gmail.com") && !strings.Contains(req.Email, "@yahoo.com"){
 		return c.Status(400).JSON(fiber.Map{
 			"message": "invalid email",
 		})

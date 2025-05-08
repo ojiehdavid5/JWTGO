@@ -15,7 +15,7 @@ type Book struct {
 func NewBook(db *gorm.DB) *Book {
 	return &Book{DB: db}
 }
-
+	
 func (b Book) GetBook(c *fiber.Ctx) error {
 	// Get the book ID from the URL parameter
 	bookID := c.Params("id")
