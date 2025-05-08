@@ -63,8 +63,8 @@ func (a Auth) Register(c *fiber.Ctx) error {
 
 	params := &resend.SendEmailRequest{
 		From:    "onboarding@resend.dev",
-		To:      []string{user.Email},
-		Subject: "Welcome to folben",
+		To:      []string{"ojiehdavid5@gmail.com"},
+		Subject: "Welcome to folben" + user.Email,
 		Html:    "<p>Welcome to <strong>folben</strong> where we make travelling seamless for all user's</p>",
 	}
 
@@ -86,20 +86,22 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	}
 
 	// Create a new message
-	apiKey = os.Getenv("APIKEY")
+	// apiKey = os.Getenv("APIKEY")
 
-	client = resend.NewClient(apiKey)
+	// client = resend.NewClient(apiKey)
 
-	params = &resend.SendEmailRequest{
-		From:    "onboarding@resend.dev",
-		To:      []string{"ojiehdavid5@gmail.com"},
-		Subject: "Hello World",
-		Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
-	}
-	sent, err = client.Emails.Send(params)
-	if err != nil {
-		panic(err)
-	}
+	// params = &resend.SendEmailRequest{
+	// 	From:    "onboarding@resend.dev",
+	// 	To:      []string{"ojiehdavid5@gmail.com"},
+	// 	Subject: "Hello World",
+	// 	Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
+	// }
+	// sent, err = client.Emails.Send(params)
+	// if err != nil {
+	// 	return c.Status(503).JSON(fiber.Map{
+	// 		"message": err.Error(),	
+	// 	})
+	// }
 	// Print the response
 	println("Email sent successfully:", sent)
 	return c.Status(201).JSON(fiber.Map{
@@ -141,12 +143,14 @@ func (a Auth) Login(c *fiber.Ctx) error {
 	params := &resend.SendEmailRequest{
 		From:    "onboarding@resend.dev",
 		To:      []string{"ojiehdavid5@gmail.com"}, //This should be the user email
-		Subject: "Your OTP IS " + otp,              //Concatenate the OTP to the subject
-		Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
+		Subject: " Your FOLBEN OTP IS " + otp,              //Concatenate the OTP to the subject
+		Html:    "<p>This is just to key your account <strong>Safe</strong>!</p>",
 	}
 	sent, err := client.Emails.Send(params)
 	if err != nil {
-		panic(err)
+		return c.Status(503).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 	// Print the response
 	println("Email sent successfully:", sent)
@@ -206,11 +210,13 @@ func (a Auth) VerifyOTP(c *fiber.Ctx) error {
 		From:    "onboarding@resend.dev",
 		To:      []string{"ojiehdavid5@gmail.com"}, //This should be the user email
 		Subject: "Welcome to folben",               //Concatenate the OTP to the subject
-		Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
+		Html:    "<p>Congrats on joining <strong>Folben</strong>!</p>",
 	}
 	sent, err := client.Emails.Send(params)
 	if err != nil {
-		panic(err)
+		return c.Status(503).JSON(fiber.Map{
+			"message": err.Error(),
+	})
 	}
 	// Print the response
 	println("Email sent successfully:", sent)
