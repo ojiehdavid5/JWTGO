@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"github.com/chuks/JWTGO/utils"
 	// "log"
+	"time"
 )
 
 type Administrator struct {
@@ -42,8 +43,15 @@ func(a Administrator) Register(c *fiber.Ctx) error {
 			"message": res.Error.Error(),
 		})
 	}
-	return c.Status(200).JSON(admin)
+	return c.Status(201).JSON(fiber.Map{
+		"message": "admin created",
+		"admin":   admin,
+	})
+
+	
 }
+	
+
 
 
 func (a Administrator) Login(c *fiber.Ctx) error {
@@ -65,7 +73,18 @@ func (a Administrator) Login(c *fiber.Ctx) error {
 			"message": "invalid password",
 		})
 	}
-	return c.Status(200).JSON(admin)
+	token, err := utils.GenerateToken(admin.ID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"token":    token,
+		"Login_at": time.Now(),
+	})
+
 }
 
 func (a Administrator) GetUsers(c *fiber.Ctx) error {

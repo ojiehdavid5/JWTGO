@@ -12,6 +12,7 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	api := app.Group("/api")
 	book := controller.NewBook(db)
 	auth := controller.NewAuth(db)
+	admin := controller.NewAdmin(db)
 	// Book
 	bookRoute := api.Group("/books")
 	bookRoute.Get("/", book.GetBooks)
@@ -25,4 +26,12 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	authRoute.Post("/login", auth.Login)
 	authRoute.Post("/register", auth.Register)
 	authRoute.Post("/otp", auth.VerifyOTP)
+
+
+	// Admin
+	adminRoute := api.Group("/admin")
+	adminRoute.Post("/register", admin.Register)
+	adminRoute.Post("/login", admin.Login)
+	adminRoute.Get("/", middleware.JWTProtected, admin.GetUsers)
+	adminRoute.Get("/:id", middleware.JWTProtected, admin.DeleteUsers)
 }
