@@ -17,7 +17,7 @@ type Administrator struct {
 type Admin struct {
 	ID           uint   `gorm:"primaryKey" json:"id"`
 	Name		 string `gorm:"not null" json:"name"`
-	PasswordHash string `gorm:"not null" json:"password_hash,omitempty"`
+	Password string `gorm:"not null" json:"password,omitempty"`
 }
 
 func NewAdmin(db *gorm.DB) *Administrator {
@@ -35,7 +35,7 @@ func(a Administrator) Register(c *fiber.Ctx) error {
 	}
 	admin := model.Admin{
 		Name:        req.Name,
-		PasswordHash: utils.GeneratePassword(req.PasswordHash),
+		PasswordHash: utils.GeneratePassword(req.Password),
 	}
 	fmt.Println(&admin)
 
@@ -64,6 +64,7 @@ func (a Administrator) Login(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
+
 	admin := model.Admin{}
 	res := a.DB.Where("name = ?", req.Name).First(&admin)
 	if res.Error != nil {
@@ -71,11 +72,17 @@ func (a Administrator) Login(c *fiber.Ctx) error {
 			"message": res.Error.Error(),
 		})
 	}
-	if !utils.VerifyPassword(req.PasswordHash, admin.PasswordHash) {
+
+	// Use req.Password instead of req.PasswordHash
+	fmt.Println("Provided Password:", req.Password)
+	fmt.Println("Stored Password Hash:", admin.PasswordHash)
+
+	if !utils.VerifyPassword(admin.PasswordHash, req.Password) {
 		return c.Status(401).JSON(fiber.Map{
 			"message": "invalid password",
 		})
 	}
+
 	token, err := utils.GenerateToken(admin.ID)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
@@ -87,9 +94,7 @@ func (a Administrator) Login(c *fiber.Ctx) error {
 		"token":    token,
 		"Login_at": time.Now(),
 	})
-
 }
-
 func (a Administrator) GetUsers(c *fiber.Ctx) error {
 	// Get all users from the database
 	users := []model.User{}

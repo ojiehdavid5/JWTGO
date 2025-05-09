@@ -25,7 +25,7 @@ func Connect() (*gorm.DB, error) {
 	fmt.Println("Connection Opened to Database")
 
 	// Migrate the schemas
-	DB.AutoMigrate(&model.Book{}, &model.User{})
+	DB.AutoMigrate(&model.Book{}, &model.User{},&model.Admin{})
 	fmt.Println("Database Migrated")
 	return DB, err
 }
