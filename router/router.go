@@ -32,6 +32,6 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	adminRoute := api.Group("/admin")
 	adminRoute.Post("/register", admin.Register)
 	adminRoute.Post("/login", admin.Login)
-	adminRoute.Get("/", middleware.JWTProtected, admin.GetUsers)
+	adminRoute.Get("/",  admin.GetUsers)
 	adminRoute.Get("/:id", middleware.JWTProtected, admin.DeleteUsers)
 }
