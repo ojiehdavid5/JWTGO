@@ -22,6 +22,7 @@ type authRequest struct {
 	Password string `json:"password"`
 }
 
+
 type otpRequest struct {
 	OTP string `json:"otp"` // Corrected field name
 }
