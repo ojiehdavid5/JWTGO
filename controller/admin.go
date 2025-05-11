@@ -109,9 +109,9 @@ func (a Administrator) GetUsers(c *fiber.Ctx) error {
 }
 
 func (a Administrator) DeleteUsers(c *fiber.Ctx) error{
-	//GET THE BOOK ID  FROM URL PARAMETER
+	//GET THE USER ID  FROM URL PARAMETER
 	userID := c.Params("id")
-	//FIND THE BOOK FROM THE DATABASE
+	//FIND THE USER FROM THE DATABASE
 user:= model.User{}
 
 res :=a.DB.First(&user,userID)
