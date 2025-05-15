@@ -35,3 +35,4 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	adminRoute.Get("/",  admin.GetUsers)
 	adminRoute.Get("/:id",  admin.DeleteUsers)
 }
+
