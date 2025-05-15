@@ -22,7 +22,6 @@ type authRequest struct {
 	Password string `json:"password"`
 }
 
-
 type otpRequest struct {
 	OTP string `json:"otp"` // Corrected field name
 }
@@ -44,7 +43,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	}
 
 	// Check if the user already exists
-	if !strings.Contains(req.Email, "@gmail.com") && !strings.Contains(req.Email, "@yahoo.com"){
+	if !strings.Contains(req.Email, "@gmail.com") && !strings.Contains(req.Email, "@yahoo.com") {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "invalid email",
 		})
@@ -100,7 +99,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	// sent, err = client.Emails.Send(params)
 	// if err != nil {
 	// 	return c.Status(503).JSON(fiber.Map{
-	// 		"message": err.Error(),	
+	// 		"message": err.Error(),
 	// 	})
 	// }
 	// Print the response
@@ -144,7 +143,7 @@ func (a Auth) Login(c *fiber.Ctx) error {
 	params := &resend.SendEmailRequest{
 		From:    "onboarding@resend.dev",
 		To:      []string{"ojiehdavid5@gmail.com"}, //This should be the user email
-		Subject: " Your FOLBEN OTP IS " + otp,              //Concatenate the OTP to the subject
+		Subject: " Your FOLBEN OTP IS " + otp,      //Concatenate the OTP to the subject
 		Html:    "<p>This is just to key your account <strong>Safe</strong>!</p>",
 	}
 	sent, err := client.Emails.Send(params)
@@ -217,7 +216,7 @@ func (a Auth) VerifyOTP(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(503).JSON(fiber.Map{
 			"message": err.Error(),
-	})
+		})
 	}
 	// Print the response
 	println("Email sent successfully:", sent)
