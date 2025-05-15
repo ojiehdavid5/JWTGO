@@ -18,7 +18,7 @@ func TestGeneratePassword(t *testing.T) {
 
 	// Verify that the password can be verified
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-	assert.NoError(t, err)
+	assert.NoError(t, err,"password verification failed")
 }
 
 
@@ -27,8 +27,7 @@ func TestVerifyPassword(t *testing.T) {
 	hashedPassword := utils.GeneratePassword(password)
 
 	// Test successful verification
-	assert.True(t, utils.VerifyPassword(hashedPassword, password))
-
+	assert.True(t, utils.VerifyPassword(hashedPassword, password),"password verification failed")
 	// Test failed verification with an incorrect password
-	assert.False(t, utils.VerifyPassword(hashedPassword, "wrong_password"))
+	assert.False(t, utils.VerifyPassword(hashedPassword, "wrong_password"),"password verification failed")
 }
