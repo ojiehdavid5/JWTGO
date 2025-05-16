@@ -56,26 +56,26 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		})
 	}
 	fmt.Println(&user)
-	apiKey := os.Getenv("APIKEY")
-	fmt.Println("API Key:", apiKey)
+	// apiKey := os.Getenv("APIKEY")
+	// fmt.Println("API Key:", apiKey)
 
-	client := resend.NewClient(apiKey)
+	// client := resend.NewClient(apiKey)
 
-	params := &resend.SendEmailRequest{
-		From:    "onboarding@resend.dev",
-		To:      []string{"ojiehdavid5@gmail.com"},
-		Subject: "Welcome to folben" + user.Email,
-		Html:    "<p>Welcome to <strong>folben</strong> where we make travelling seamless for all user's</p>",
-	}
+	// params := &resend.SendEmailRequest{
+	// 	From:    "onboarding@resend.dev",
+	// 	To:      []string{"ojiehdavid5@gmail.com"},
+	// 	Subject: "Welcome to folben" + user.Email,
+	// 	Html:    "<p>Welcome to <strong>folben</strong> where we make travelling seamless for all user's</p>",
+	// }
 
-	sent, err := client.Emails.Send(params)
+	// sent, err := client.Emails.Send(params)
 
-	if err != nil {
-		panic(err)
-	}
-	// Print the response
-	println("Email sent successfully:", sent)
-	// Create a new message
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// // Print the response
+	// println("Email sent successfully:", sent)
+	// // Create a new message
 
 	// Create the user
 	res = a.DB.Create(&user)
@@ -103,7 +103,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	// 	})
 	// }
 	// Print the response
-	println("Email sent successfully:", sent)
+	// println("Email sent successfully:", sent)
 	return c.Status(201).JSON(fiber.Map{
 		"message": "user created",
 	})

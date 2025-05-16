@@ -22,7 +22,10 @@ import (
 
 	
 )
-
+type authRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
 func setupTestDB(t * testing.T)*gorm.DB { 
 	dsn := "host=localhost port=5432 user=user password=Qwerty dbname=postgres sslmode=disable"
 	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -49,21 +52,22 @@ func TestRegister(t *testing.T) {
 	db := setupTestDB(t)
 	app := setupFiberApp(db)
 
-	reqBody := `{"email":"ojieh@gmail.com", "password":"securepassword"}`
+	reqBody := `{"email":"yenum@gmail.com", "password":"securepassword"}`
 	req := httptest.NewRequest(http.MethodPost, "/register", bytes.NewBufferString(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	// First registration attempt
 	resp, err := app.Test(req)
-
-	
-
 	assert.NoError(t, err)
 	assert.Equal(t, 201, resp.StatusCode)
 
 	// Attempt to register the same user again
-	req=httptest.NewRequest(http.MethodPost, "/register", bytes.NewBufferString(reqBody))
-	// respDuplicate, err := app.Test(fiber.New().Post("/register", req))
-	resp ,err= app.Test(req)
+	req = httptest.NewRequest(http.MethodPost, "/register", bytes.NewBufferString(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	respDuplicate, err := app.Test(req)
 	assert.NoError(t, err)
-	assert.Equal(t, 400, resp.StatusCode)
+	assert.Equal(t, 400, respDuplicate.StatusCode)
 }
 
 	
