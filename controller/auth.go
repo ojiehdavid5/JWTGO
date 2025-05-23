@@ -37,17 +37,15 @@ func (a Auth) Register(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-	user := model.User{
-		Email:        req.Email,
-		PasswordHash: utils.GeneratePassword(req.Password),
-	}
 
-	// Check if the user already exists
+	// Validate email format
 	if !strings.Contains(req.Email, "@gmail.com") && !strings.Contains(req.Email, "@yahoo.com") {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "invalid email",
 		})
 	}
+
+	// Check if the user already exists
 	var existingUser model.User
 	res := a.DB.Where("email = ?", req.Email).First(&existingUser)
 	if res.Error == nil {
@@ -55,29 +53,13 @@ func (a Auth) Register(c *fiber.Ctx) error {
 			"message": "user already exists",
 		})
 	}
-	fmt.Println(&user)
-	// apiKey := os.Getenv("APIKEY")
-	// fmt.Println("API Key:", apiKey)
 
-	// client := resend.NewClient(apiKey)
+	// Create a new user
+	user := model.User{
+		Email:        req.Email,
+		PasswordHash: utils.GeneratePassword(req.Password),
+	}
 
-	// params := &resend.SendEmailRequest{
-	// 	From:    "onboarding@resend.dev",
-	// 	To:      []string{"ojiehdavid5@gmail.com"},
-	// 	Subject: "Welcome to folben" + user.Email,
-	// 	Html:    "<p>Welcome to <strong>folben</strong> where we make travelling seamless for all user's</p>",
-	// }
-
-	// sent, err := client.Emails.Send(params)
-
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// // Print the response
-	// println("Email sent successfully:", sent)
-	// // Create a new message
-
-	// Create the user
 	res = a.DB.Create(&user)
 	if res.Error != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -85,29 +67,47 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		})
 	}
 
-	//Create a new message
-	// apiKey = os.Getenv("APIKEY")
+	// Send welcome email
+	apiKey := os.Getenv("APIKEY")
+	client := resend.NewClient(apiKey)
 
-	// client = resend.NewClient(apiKey)
+	params := &resend.SendEmailRequest{
+		From:    "onboarding@resend.dev",
+		To:      []string{"ojiehdavid5@gmail.com"}, // Send to the registered user's email
+		Subject: "Welcome to folben",
+		Html:    "<p>Welcome to <strong>folben</strong>, where we make traveling seamless for all users!</p>",
+	}
 
-	// params = &resend.SendEmailRequest{
-	// 	From:    "onboarding@resend.dev",
-	// 	To:      []string{"ojiehdavid5@gmail.com"},
-	// 	Subject: "Hello World",
-	// 	Html:    "<p>Congrats on sending your <strong>first email</strong>!</p>",
-	// }
-	// sent, err = client.Emails.Send(params)
-	// if err != nil {
-	// 	return c.Status(503).JSON(fiber.Map{
-	// 		"message": err.Error(),
-	// 	})
-	// }
-	//Print the response
-	// println("Email sent successfully:", sent)
+	sent, err := client.Emails.Send(params)
+	if err != nil {
+		return c.Status(503).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+// Convert model.User to utils.User
+	utilsUser := utils.User{
+		Email:        req.Email,
+		PasswordHash: user.PasswordHash, // Or however you want to handle password
+	}
+
+
+
+	if err := utils.WriteUserToFile(utilsUser, "user.txt"); err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Failed to write user to file",
+		})
+	}
+
+	// Print the response
+	fmt.Println("Email sent successfully:", sent)
+
+
 	return c.Status(201).JSON(fiber.Map{
 		"message": "user created",
 	})
 }
+
+
 
 func (a Auth) Login(c *fiber.Ctx) error {
 	var req authRequest
@@ -155,6 +155,8 @@ func (a Auth) Login(c *fiber.Ctx) error {
 	// Print the response
 	println("Email sent successfully:", sent.Id)
 	fmt.Println("OTP sent to email:", otp)
+
+
 
 	//Returning the OTP directly to the client is a security risk. Remove this in production.
 	return c.Status(200).JSON(fiber.Map{
