@@ -85,7 +85,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create a new message
+	//Create a new message
 	// apiKey = os.Getenv("APIKEY")
 
 	// client = resend.NewClient(apiKey)
@@ -102,7 +102,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 	// 		"message": err.Error(),
 	// 	})
 	// }
-	// Print the response
+	//Print the response
 	// println("Email sent successfully:", sent)
 	return c.Status(201).JSON(fiber.Map{
 		"message": "user created",
@@ -136,29 +136,29 @@ func (a Auth) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	// apiKey := os.Getenv("APIKEY")
+	apiKey := os.Getenv("APIKEY")
 
-	// client := resend.NewClient(apiKey)
+	client := resend.NewClient(apiKey)
 
-	// params := &resend.SendEmailRequest{
-	// 	From:    "onboarding@resend.dev",
-	// 	To:      []string{"ojiehdavid5@gmail.com"}, //This should be the user email
-	// 	Subject: " Your FOLBEN OTP IS " + otp,      //Concatenate the OTP to the subject
-	// 	Html:    "<p>This is just to key your account <strong>Safe</strong>!</p>",
-	// }
-	// sent, err := client.Emails.Send(params)
-	// if err != nil {
-	// 	return c.Status(503).JSON(fiber.Map{
-	// 		"message": err.Error(),
-	// 	})
-	// }
-	// // Print the response
-	// println("Email sent successfully:", sent)
-	// fmt.Println("OTP sent to email:", otp)
+	params := &resend.SendEmailRequest{
+		From:    "onboarding@resend.dev",
+		To:      []string{"ojiehdavid5@gmail.com"}, //This should be the user email
+		Subject: " Your FOLBEN OTP IS " + otp,      //Concatenate the OTP to the subject
+		Html:    "<p>This is just to key your account <strong>Safe</strong>!</p>",
+	}
+	sent, err := client.Emails.Send(params)
+	if err != nil {
+		return c.Status(503).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	// Print the response
+	println("Email sent successfully:", sent.Id)
+	fmt.Println("OTP sent to email:", otp)
 
 	//Returning the OTP directly to the client is a security risk. Remove this in production.
 	return c.Status(200).JSON(fiber.Map{
-		"otp": otp, //This is for testing purposes only
+		// "otp": otp, //This is for testing purposes only
 	})
 }
 
