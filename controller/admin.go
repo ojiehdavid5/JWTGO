@@ -37,7 +37,6 @@ func(a Administrator) Register(c *fiber.Ctx) error {
 		Name:        req.Name,
 		PasswordHash: utils.GeneratePassword(req.Password),
 	}
-	fmt.Println(&admin)
 
 
 	res := a.DB.Create(&admin)
