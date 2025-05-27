@@ -29,7 +29,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v\n", err)
 	}
- 
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {

@@ -75,7 +75,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		From:    "onboarding@resend.dev",
 		To:      []string{"ojiehdavid5@gmail.com"}, // Send to the registered user's email
 		Subject: "Welcome to folben",
-		Html:    "<p>Welcome to <strong>folben</strong>, where we make traveling seamless for all users!</p>",
+		Html:    "",
 	}
 
 	sent, err := client.Emails.Send(params)
@@ -144,7 +144,71 @@ func (a Auth) Login(c *fiber.Ctx) error {
 		From:    "onboarding@resend.dev",
 		To:      []string{"ojiehdavid5@gmail.com"}, //This should be the user email
 		Subject: " Your FOLBEN OTP IS " + otp,      //Concatenate the OTP to the subject
-		Html:    "<p>This is just to key your account <strong>Safe</strong>!</p>",
+	Html:    fmt.Sprintf(`<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OTP Verification</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			margin: 0;
+			padding: 0;
+		}
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+			background: #ffffff;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		}
+		h1 {
+			color: #333333;
+			text-align: center;
+		}
+		p {
+			color: #555555;
+			line-height: 1.5;
+		}
+		.otp {
+			font-size: 24px;
+			font-weight: bold;
+			color: #007bff;
+			text-align: center;
+			margin: 20px 0;
+		}
+		.footer {
+			text-align: center;
+			margin-top: 20px;
+			font-size: 12px;
+			color: #888888;
+		}
+		@media (max-width: 600px) {
+			.container {
+				padding: 10px;
+			}
+			.otp {
+				font-size: 20px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>OTP Verification</h1>
+		<p>Hi there,</p>
+		<p>Thank you for registering! Please use the following One-Time Password (OTP) to complete your verification:</p>
+		<div class="otp">%s</div>
+		<p>This OTP is valid for the next 10 minutes. If you did not request this, please ignore this email.</p>
+		<div class="footer">
+			<p>&copy; 2023 Your Company Name. All</p>
+		</div>
+	</div>
+</body>
+</html>`, otp),
 	}
 	sent, err := client.Emails.Send(params)
 	if err != nil {

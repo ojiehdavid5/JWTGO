@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+
 func GenerateOTP(length int) (string, error) {
 	const digits = "0123456789"
 	otp := make([]byte, length)
