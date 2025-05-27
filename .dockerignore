@@ -1,0 +1,5 @@
+# Ignore the Go module cache
+/go.sum
+/go.mod
+# Ignore binary files
+/JWTGO
