@@ -16,6 +16,7 @@ require (
 	gorm.io/gorm v1.26.0
 )
 
+
 require (
 	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
