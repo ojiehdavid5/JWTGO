@@ -21,6 +21,7 @@ func (b Book) GetBook(c *fiber.Ctx) error {
 	bookID := c.Params("id")
 	// Find the book in the database
 	book := model.Book{}
+	
 	res := b.DB.First(&book, bookID)
 	if res.Error != nil {
 		return c.Status(404).JSON(fiber.Map{
