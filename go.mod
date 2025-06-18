@@ -5,17 +5,16 @@ go 1.24.1
 require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gofiber/contrib/jwt v1.1.1
-	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.8.0
-	github.com/resend/resend-go/v2 v2.18.0
+	github.com/resend/resend-go/v2 v2.20.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/crypto v0.37.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.26.0
 )
-
 
 require (
 	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect
