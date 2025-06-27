@@ -75,7 +75,7 @@ func (a Auth) Register(c *fiber.Ctx) error {
 		From:    "onboarding@resend.dev",
 		To:      []string{"ojiehdavid5@gmail.com"}, // Send to the registered user's email
 		Subject: "Welcome to folben",
-		Html:    "",
+		Html:    "<h1> welcome</h1>",
 	}
 
 	sent, err := client.Emails.Send(params)
