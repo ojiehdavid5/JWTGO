@@ -100,6 +100,7 @@ func (a Administrator) GetUsers(c *fiber.Ctx) error {
 	res := a.DB.Find(&users)
 	if res.Error != nil {
 		return c.Status(404).JSON(fiber.Map{
+			
 			"message": res.Error.Error(),
 		})
 	}
